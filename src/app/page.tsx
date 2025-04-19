@@ -1,4 +1,5 @@
 import { Hero } from "@/components";
+// import Test from "@/components/Test";
 
 
 
@@ -11,6 +12,7 @@ export default function Home() {
       <section className="flex flex-col items-center justify-center w-full h-screen bg-gradient-to-b from-[#000000] to-[#1a1a1a]">
 
       </section>
+      {/* <Test/> */}
     </main>
   );
 }

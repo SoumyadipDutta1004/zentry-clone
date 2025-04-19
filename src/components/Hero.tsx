@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import Button from "./Button";
-import { TiLocationArrow } from "react-icons/ti";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import AnimatedVideoButton from "./AnimatedVideoButton";
-import { heroHeading } from "@/constants/heading";
 import { ScrollTrigger } from "gsap/all";
+
+import { heroHeading } from "@/constants/heading";
+import AnimatedVideoButton from "./AnimatedVideoButton";
+import Button from "./Button";
+
+import { TiLocationArrow } from "react-icons/ti";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,6 +17,7 @@ export default function Hero() {
 
   const [previousIndex, setPreviousIndex] = useState<number>(1);
   const [currentIndex, setCurrentIndex] = useState<number>(1);
+  const [headingIndex, setHeadingIndex] = useState<number>(1);
   const [hasClicked, setHasClicked] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -25,7 +28,6 @@ export default function Hero() {
 
   useEffect(() => {
     setIsLoading(false);
-  
   }, []);
 
   function handleMiniVdClick() {
@@ -44,7 +46,8 @@ export default function Hero() {
     if (hasClicked) {
       gsap.set('#next-video', { visibility: 'visible' });
 
-      gsap.to('#next-video', {
+      const tl = gsap.timeline();
+      tl.to('#next-video', {
         transformOrigin: 'center center',
         scale: 1,
         width: '100%',
@@ -54,30 +57,57 @@ export default function Hero() {
         onStart: () => {
           nextVideoRef.current!.play();
         },
+        onComplete: () => {
+          setHeadingIndex((prevIndex) => (prevIndex % totalVideos) + 1);
+        }
+      });
+      tl.from('#hero-heading1', {
+        y: -50,
+        x: -100,
+        rotateZ: -10,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        overwrite: true,
       });
       gsap.from('#current-video', {
-        scale: 0,
+        opacity: 0,
+        scale: 0.3,
         duration: 1,
-        delay: 0.5,
+        delay: 0.3,
       });
+      gsap.to(
+        '#hero-heading2',
+        {
+          y: 200,
+          x: 200,
+          rotateX: 50,
+          rotateY: -80,
+          opacity: 1,
+          duration: 1.5,
+          delay: 0.2,
+          ease: 'power2.out',
+          overwrite: true,
+        }
+      );
     }
   }, { dependencies: [currentIndex], revertOnUpdate: true });
 
   useGSAP(() => {
-    gsap.set('#video-frame', {
-      clipPath: 'polygon(10% 0, 72% 0, 90% 90%, 0 100%)',
-      borderRadius: '0% 0% 40% 10%',
+    gsap.set("#video-frame", {
+      clipPath: "polygon(14% 0, 72% 0, 88% 90%, 0 95%)",
+      borderRadius: "0% 0% 40% 10%",
     });
-    gsap.from('#video-frame', {
-      clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)',
-      borderRadius: '0% 0% 0% 0%',
-      ease: 'power1.inOut',
+    gsap.from("#video-frame", {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+      borderRadius: "0% 0% 0% 0%",
+      ease: "power1.inOut",
       scrollTrigger: {
-        trigger: '#video-frame',
-        start: 'center center',
-        end: 'bottom center',
+        trigger: "#video-frame",
+        start: "center center",
+        end: "bottom center",
         scrub: true,
-      }
+      },
     });
   });
 
@@ -87,9 +117,9 @@ export default function Hero() {
       {isLoading && (
         <div className="absolute-center z-50 h-screen w-screen bg-blue-75">
           <div className="three-body">
-            <div className="three-body__dot"/>
-            <div className="three-body__dot"/>
-            <div className="three-body__dot"/>
+            <div className="three-body__dot" />
+            <div className="three-body__dot" />
+            <div className="three-body__dot" />
           </div>
         </div>
       )}
@@ -127,8 +157,11 @@ export default function Hero() {
           />
         </div>
 
-        <h1 className="special-font hero-heading absolute z-50 bottom-5 right-5 text-blue-75">
-          {heroHeading[currentIndex - 1]}
+        <h1 id="hero-heading1" className="special-font hero-heading absolute z-50 bottom-5 right-5 text-blue-75">
+          {heroHeading[headingIndex - 1]}
+        </h1>
+        <h1 id="hero-heading2" className="special-font hero-heading absolute z-50 bottom-5 right-5 text-blue-75">
+          {heroHeading[headingIndex - 1]}
         </h1>
 
         <div className="absolute left-0 top-0 z-40 size-full">
@@ -147,8 +180,9 @@ export default function Hero() {
         </div>
       </div>
       <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
-        {heroHeading[currentIndex - 1]}
+        {heroHeading[headingIndex - 1]}
       </h1>
+
     </div>
   );
 }

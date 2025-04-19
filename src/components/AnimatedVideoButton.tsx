@@ -117,8 +117,8 @@ export default function AnimatedVideoButton({
 
     if(isMouseEnter){
       gsap.to(boxRef.current, {
-        rotateY: rotation.x,
-        rotateX: rotation.y,
+        rotateY: rotation.x * 1.5,
+        rotateX: rotation.y * 1.5,
         translateZ: `${Math.abs(rotation.x + rotation.y) * 2}px`,
         x: rotation.x * 4,
         y: (rotation.y * -1) * 4,
