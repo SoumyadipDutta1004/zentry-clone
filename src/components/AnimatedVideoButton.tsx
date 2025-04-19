@@ -115,15 +115,19 @@ export default function AnimatedVideoButton({
     // Stop any previous animation
     gsap.killTweensOf(boxRef.current);
 
-    gsap.to(boxRef.current, {
-      rotateY: rotation.x,
-      rotateX: rotation.y,
-      translateZ: `${Math.abs(rotation.x + rotation.y) * 2}px`,
-      x: rotation.x * 4,
-      y: (rotation.y * -1) * 4,
-      scale: 1
-    });
-  }, [rotation]);
+    if(isMouseEnter){
+      gsap.to(boxRef.current, {
+        rotateY: rotation.x,
+        rotateX: rotation.y,
+        translateZ: `${Math.abs(rotation.x + rotation.y) * 2}px`,
+        x: rotation.x * 4,
+        y: (rotation.y * -1) * 4,
+        width: '256px',
+        height: '256px',
+        scale: 1
+      });
+    }
+  }, [rotation, isMouseEnter]);
 
   const absoluteCenter = "absolute top-1/2 left-1/2 -translate-1/2";
 
@@ -131,7 +135,7 @@ export default function AnimatedVideoButton({
     <div
       onClick={onClick}
       ref={boxRef}
-      className={`${absoluteCenter} size-64 rounded-lg translate-z-[0px] rotate-x-[0deg] rotate-y-[0deg] border-2 scale-0 z-30 overflow-hidden`}
+      className={`${absoluteCenter} rounded-lg translate-z-[0px] rotate-x-[0deg] rotate-y-[0deg] border-2 scale-0 z-30 overflow-hidden`}
       onMouseEnter={() => {
         setIsMouseOnBox(true);
       }}
