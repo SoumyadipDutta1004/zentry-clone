@@ -5,8 +5,6 @@ import { ReactNode, useEffect, useRef } from "react";
 import { useState } from "react";
 
 
-
-
 export default function AnimatedVideoButton({
   children,
   onClick,
@@ -62,14 +60,14 @@ export default function AnimatedVideoButton({
     }, 1000); // 1s after mouse stops
 
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseover', handleMouseEnterWindow);
-    document.addEventListener('mouseout', handleMouseLeaveWindow);
+    document.querySelector('#hero')!.addEventListener('mouseover', handleMouseEnterWindow);
+    document.querySelector('#hero')!.addEventListener('mouseout', handleMouseLeaveWindow);
 
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseout', handleMouseLeaveWindow);
-      document.removeEventListener('mouseover', handleMouseEnterWindow);
+      document.querySelector('#hero')!.removeEventListener('mouseout', handleMouseLeaveWindow);
+      document.querySelector('#hero')!.removeEventListener('mouseover', handleMouseEnterWindow);
     };
   }, [center.x, center.y, mousePosition.x, mousePosition.y]);
 
@@ -87,6 +85,8 @@ export default function AnimatedVideoButton({
   }, []);
 
   useGSAP(() => {
+    if (!boxRef.current) return;
+    console.log('isMouseMoving', isMouseEnter);
     if (isMouseOnBox) {
       gsap.to(boxRef.current, {
         scale: 1.1,
@@ -97,37 +97,34 @@ export default function AnimatedVideoButton({
       });
     }
     else if (!isMouseMoving || !isMouseEnter) {
-      if (!boxRef.current) return;
-
       // Return to initial position when mouse stops
       gsap.to(boxRef.current, {
         scale: 0,
         duration: 1
       });
+      return;
     }
-    
   }, [isMouseMoving, isMouseEnter, isMouseOnBox]);
 
   // Rotate the box like 3d on the mouse movement
   useGSAP(() => {
     if (!boxRef.current) return;
+    if (!isMouseEnter) return;
 
     // Stop any previous animation
     gsap.killTweensOf(boxRef.current);
 
-    if(isMouseEnter){
-      gsap.to(boxRef.current, {
-        rotateY: rotation.x * 1.5,
-        rotateX: rotation.y * 1.5,
-        translateZ: `${Math.abs(rotation.x + rotation.y) * 2}px`,
-        x: rotation.x * 4,
-        y: (rotation.y * -1) * 4,
-        width: '256px',
-        height: '256px',
-        scale: 1
-      });
-    }
-  }, [rotation, isMouseEnter]);
+    gsap.to(boxRef.current, {
+      rotateY: rotation.x * 1.5,
+      rotateX: rotation.y * 1.5,
+      translateZ: `${Math.abs(rotation.x + rotation.y) * 2}px`,
+      x: rotation.x * 4,
+      y: (rotation.y * -1) * 4,
+      width: '256px',
+      height: '256px',
+      scale: 1
+    });
+  }, [rotation]);
 
   const absoluteCenter = "absolute top-1/2 left-1/2 -translate-1/2";
 

@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
+import gsap from "gsap";
 
 import { heroHeading } from "@/constants/heading";
 import AnimatedVideoButton from "./AnimatedVideoButton";
@@ -96,7 +96,7 @@ export default function Hero() {
   useGSAP(() => {
     gsap.set("#video-frame", {
       clipPath: "polygon(14% 0, 72% 0, 88% 90%, 0 95%)",
-      borderRadius: "0% 0% 40% 10%",
+      borderRadius: "0% 0% 50% 30%",
     });
     gsap.from("#video-frame", {
       clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
@@ -113,7 +113,7 @@ export default function Hero() {
 
 
   return (
-    <div className="relative h-dvh w-screen overflow-x-hidden">
+    <div id="hero" className="relative h-dvh w-screen overflow-hidden">
       {isLoading && (
         <div className="absolute-center z-50 h-screen w-screen bg-blue-75">
           <div className="three-body">
