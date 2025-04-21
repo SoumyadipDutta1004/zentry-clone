@@ -60,14 +60,14 @@ export default function AnimatedVideoButton({
     }, 1000); // 1s after mouse stops
 
     document.addEventListener('mousemove', handleMouseMove);
-    document.querySelector('#hero')!.addEventListener('mouseover', handleMouseEnterWindow);
-    document.querySelector('#hero')!.addEventListener('mouseout', handleMouseLeaveWindow);
+    document.querySelector('#hero')?.addEventListener('mouseover', handleMouseEnterWindow);
+    document.querySelector('#hero')?.addEventListener('mouseout', handleMouseLeaveWindow);
 
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.querySelector('#hero')!.removeEventListener('mouseout', handleMouseLeaveWindow);
-      document.querySelector('#hero')!.removeEventListener('mouseover', handleMouseEnterWindow);
+      document.querySelector('#hero')?.removeEventListener('mouseout', handleMouseLeaveWindow);
+      document.querySelector('#hero')?.removeEventListener('mouseover', handleMouseEnterWindow);
     };
   }, [center.x, center.y, mousePosition.x, mousePosition.y]);
 
@@ -86,7 +86,6 @@ export default function AnimatedVideoButton({
 
   useGSAP(() => {
     if (!boxRef.current) return;
-    console.log('isMouseMoving', isMouseEnter);
     if (isMouseOnBox) {
       gsap.to(boxRef.current, {
         scale: 1.1,
