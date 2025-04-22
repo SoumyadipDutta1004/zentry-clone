@@ -12,6 +12,12 @@ import { TiLocationArrow } from "react-icons/ti";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const videoUrls = [
+  "videos/hero-1.mp4",
+  "videos/hero-2.mp4",
+  "videos/hero-3.mp4",
+  "videos/hero-4.mp4",
+];
 
 export default function Hero() {
 
@@ -20,6 +26,7 @@ export default function Hero() {
   const [headingIndex, setHeadingIndex] = useState<number>(1);
   const [hasClicked, setHasClicked] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [videoBlobs, setVideoBlobs] = useState<string[]>([]);
 
   const currentVideoRef = useRef<HTMLVideoElement>(null);
   const nextVideoRef = useRef<HTMLVideoElement>(null);
@@ -27,6 +34,18 @@ export default function Hero() {
 
 
   useEffect(() => {
+    const loadVideos = async () => {
+      const blobs = await Promise.all(
+        videoUrls.map(async (url) => {
+          const response = await fetch(url);
+          const blob = await response.blob();
+          return URL.createObjectURL(blob);
+        })
+      );
+      setVideoBlobs(blobs);
+    };
+
+    loadVideos();
     setIsLoading(false);
   }, []);
 
@@ -131,7 +150,7 @@ export default function Hero() {
             >
               <video
                 ref={currentVideoRef}
-                src={getVideoSrc((currentIndex % totalVideos) + 1)}
+                src={videoBlobs[(currentIndex % totalVideos) + 1]}
                 loop
                 muted
 
@@ -141,7 +160,7 @@ export default function Hero() {
           </div>
           <video
             ref={nextVideoRef}
-            src={getVideoSrc(currentIndex)}
+            src={videoBlobs[currentIndex]}
             loop
             muted
             id="next-video"
@@ -149,7 +168,7 @@ export default function Hero() {
           />
 
           <video
-            src={getVideoSrc(previousIndex)}
+            src={videoBlobs[previousIndex]}
             autoPlay
             loop
             muted
