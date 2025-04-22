@@ -57,10 +57,6 @@ export default function Hero() {
     setCurrentIndex((prevIndex) => (prevIndex % totalVideos) + 1);
   }
 
-  function getVideoSrc(index: number) {
-    return `videos/hero-${index}.mp4`;
-  }
-
   useGSAP(() => {
     if (hasClicked) {
       gsap.set('#next-video', { visibility: 'visible' });
